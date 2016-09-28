@@ -1,0 +1,16 @@
+{
+  "name": "paperfire-login",
+  "description": "A helper element to make login to firebase really easy. use link attribute to link accounts.",
+  "main": "paperfire-login.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "paper-input": "PolymerElements/paper-input#^1.1.20",
+    "paper-button": "PolymerElements/paper-button#^1.0.13"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  }
+}

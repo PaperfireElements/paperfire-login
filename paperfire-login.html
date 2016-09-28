@@ -1,0 +1,57 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+`paperfire-login`
+A helper element to make login to firebase really easy. use link attribute to link accounts.
+
+@demo demo/index.html
+-->
+
+<dom-module id="paperfire-login">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]</h2>
+    <template is="dom-if" if="{{emailPassword}}" restamp="true">
+      <h1>emailPassword</h1>
+      <paper-input label="email"></paper-input>
+      <paper-input label="password"></paper-input>
+    </template>
+    <template is="dom-if" if="{{google}}" restamp="true">
+      <paper-button class="google" on-tap="onLinkGoogle"><img src="images/btn_google.png" alt="Sign in with Google" /></paper-button>
+    </template>
+    <template is="dom-if" if="{{facebook}}" restamp="true">
+      <h1>facebook</h1>
+    </template>
+    <template is="dom-if" if="{{github}}" restamp="true">
+      <h1>github</h1>
+    </template>
+    <template is="dom-if" if="{{twitter}}" restamp="true">
+      <h1>twitter</h1>
+    </template>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'paperfire-login',
+
+      properties: {
+        google: Boolean,
+        facebook: Boolean,
+        github: Boolean,
+        twitter: Boolean,
+        emailPassword: Boolean,
+        link: Boolean,
+        prop1: {
+          type: String,
+          value: 'paperfire-login',
+        },
+      },
+
+    });
+  </script>
+</dom-module>
