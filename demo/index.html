@@ -9,6 +9,8 @@
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
 
+    <link rel="import" href="../../polymerfire/firebase-app.html">
+    <link rel="import" href="../../paperfire-auth/paperfire-auth.html">
     <link rel="import" href="../paperfire-login.html">
 
     <style is="custom-style" include="demo-pages-shared-styles">
@@ -20,7 +22,12 @@
       <h3>Basic paperfire-login Demo</h3>
       <demo-snippet>
         <template>
-          <paperfire-login></paperfire-login>
+          <!-- use firebase-app from polymerfire to initialize app -->
+          <firebase-app id="app" app-name="test"     auth-domain="paperfireelements.firebaseapp.com" database-url="https://paperfireelements.firebaseio.com/" storage-bucket="paperfireelements.appspot.com" api-key="AIzaSyBV90mRwJOGY7uO_RVWkchk9oUBx2E-sac" messaging-sender-id="637337808974">
+          </firebase-app>
+          <!-- paperfire-auth helps with anon login -->
+          <paperfire-auth anon-login is-anonymous="{{isAnon}}" uid="{{uid}}"></paperfire-auth>
+          <paperfire-login google link></paperfire-login>
         </template>
       </demo-snippet>
     </div>

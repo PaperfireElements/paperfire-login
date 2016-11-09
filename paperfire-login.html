@@ -1,8 +1,17 @@
 <link rel="import" href="../polymer/polymer.html">
-
+<link rel="import" href="../polymerfire/firebase-auth.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-input/paper-input.html">
 <!--
 `paperfire-login`
 A helper element to make login to firebase really easy. use link attribute to link accounts.
+
+When using polymer build make sure you add to copy over images for social login
+"sourceGlobs": [
+   ...
+   "bower_components/paperfire-login/images/*",
+   ...
+  ],
 
 @demo demo/index.html
 -->
@@ -13,25 +22,147 @@ A helper element to make login to firebase really easy. use link attribute to li
       :host {
         display: block;
       }
+
+      div.container {
+        overflow: hidden;
+      }
+
+      paper-input {
+        text-align: left;
+      }
+
+      paper-button {
+        margin-bottom: 8px;
+        float: left;
+        margin-right: 8px;
+        font-weight: bolder;
+        background-color: white;
+        color: rgba(0, 0, 0, 0.54);
+        height: 40px;
+      }
+
+      paper-button.email {
+        margin: 0;
+      }
+
+      paper-button.google {
+        padding: 0 16px 0 8px;
+        color: rgba(0, 0, 0, 0.54);
+        background-color: white;
+        height: 40px;
+        font-family: Roboto-Medium;
+        font-weight: bolder;
+        font-size: 14px;
+        --paper-button-ink-color: #4285F4;
+      }
+      .google img {
+        margin: -8px 0 -8px -8px;
+      }
+
+      paper-button.facebook {
+        padding: 0 16px 0 8px;
+        color: white;
+        background-color: #3b5998;
+        height: 40px;
+        font-family: Roboto-Medium;
+        font-size: 14px;
+        --paper-button-ink-color: white;
+        vertical-align: center;
+      }
+      .facebook img {
+        display: block;
+        margin-right: 8px;
+      }
+
+      paper-button.twitter {
+        padding: 0 16px 0 4px;
+        color: rgba(0, 0, 0, 0.54);
+        background-color: white;
+        height: 40px;
+        font-family: 'Helvetica Neue Pro 55 Roman', 'Helvetica Neue', 'Helvetica' sans-serif;
+        font-weight: bolder;
+        font-size: 14px;
+        --paper-button-ink-color: #1DA1F2;
+        vertical-align: center;
+      }
+      .twitter img {
+        display: block;
+      }
+
+      paper-button.github {
+        padding: 0 16px 0 8px;
+        color: rgba(0, 0, 0, 0.54);
+        background-color: white;
+        height: 40px;
+        font-size: 14px;
+        --paper-button-ink-color: black;
+        vertical-align: center;
+      }
+      .github img {
+        display: block;
+        margin-right: 8px;
+      }
+
+      a.theme-dark {
+        color: white;
+      }
+
+      paper-input.theme-dark {
+        --paper-input-container-color: white;
+        --paper-input-container-invalid-color: red;
+        --paper-input-container-input-color: white;
+      }
+      .clear {
+        clear: both;
+      }
+
     </style>
-    <h2>Hello [[prop1]]</h2>
-    <template is="dom-if" if="{{emailPassword}}" restamp="true">
-      <h1>emailPassword</h1>
-      <paper-input label="email"></paper-input>
-      <paper-input label="password"></paper-input>
-    </template>
-    <template is="dom-if" if="{{google}}" restamp="true">
-      <paper-button class="google" on-tap="onLinkGoogle"><img src="images/btn_google.png" alt="Sign in with Google" /></paper-button>
-    </template>
-    <template is="dom-if" if="{{facebook}}" restamp="true">
-      <h1>facebook</h1>
-    </template>
-    <template is="dom-if" if="{{github}}" restamp="true">
-      <h1>github</h1>
-    </template>
-    <template is="dom-if" if="{{twitter}}" restamp="true">
-      <h1>twitter</h1>
-    </template>
+    <firebase-auth id="auth" user="{{user}}"></firebase-auth>
+    <div class="container">
+      <template is="dom-if" if="{{debug}}">
+        <pre>email: [[email]]</pre>
+        <pre>google: [[google]]</pre>
+        <pre>facebook: [[facebook]]</pre>
+        <pre>twitter: [[twitter]]</pre>
+        <pre>github: [[github]]</pre>
+        <pre>[[user]]</pre>
+      </template>
+      <template is="dom-if" if="{{email}}" restamp="true">
+        <paper-input
+          id="inputEmail"
+          class$="[[_darkClass]]"
+          label="Email"
+          value="{{_email}}"
+          error-message="Email Invalid"
+          type="email"
+          pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+          required
+          invalid="{{invalidEmail}}"
+          on-input="_validateEmail"></paper-input>
+        <paper-input class$="[[_darkClass]]" label="Password" type="password" value="{{_password}}" char-count error-message="">
+          <paper-button id="btnEmail" suffix raised class$="email [[_darkClass]]" on-tap="onEmailPassword">Sign in</paper-button>
+        </paper-input>
+
+        <br class="clear">
+      </template>
+      <template is="dom-if" if="{{google}}" restamp="true">
+        <paper-button id="btnGoogle" raised class="google" on-tap="onGoogle"><img src="images/btn_google.svg" alt="google logo" height="40px" width="40px"/>sign in with google</paper-button>
+      </template>
+      <template is="dom-if" if="{{facebook}}" restamp="true">
+        <paper-button id="btnFacebook" raised class="facebook" on-tap="onFacebook"><img src="images/btn_facebook.png" alt="facebook logo" height="28px" width="28px">sign in with facebook</paper-button>
+      </template>
+      <template is="dom-if" if="{{twitter}}" restamp="true">
+        <paper-button id="btnTwitter" class="twitter" raised on-tap="onTwitter"><img src="images/btn_twitter.svg" alt="twitter logo" height="40px" width="40px"/>sign in with twitter</paper-button>
+      </template>
+      <template is="dom-if" if="{{github}}" restamp="true">
+        <paper-button id="btnGithub" class="github" raised on-tap="onGithub"><img src="images/btn_github.png" alt="github logo" height="24px" width="24px"/>sign in with github</paper-button>
+      </template>
+      <template is="dom-if" if="{{tos}}" restamp="true">
+        <br class="clear">
+        <a id="linkTos" href$="[[tos]]" class$="[[_darkClass]]">Terms of Service</a>
+      </template>
+      <br>
+    </div>
   </template>
 
   <script>
@@ -40,18 +171,208 @@ A helper element to make login to firebase really easy. use link attribute to li
       is: 'paperfire-login',
 
       properties: {
+        dark: {
+          type: Boolean,
+          observer: '_setDark'
+        },
+        debug: Boolean,
         google: Boolean,
         facebook: Boolean,
         github: Boolean,
         twitter: Boolean,
-        emailPassword: Boolean,
+        email: Boolean,
         link: Boolean,
-        prop1: {
-          type: String,
-          value: 'paperfire-login',
+        tos: String,
+        onError: {
+          Type: Object,
+          notify: true,
+          readyOnly: true,
+          value: null
         },
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        token: {
+          type: String,
+          readOnly: true,
+          notify: true,
+          reflectToAttribute: true
+        },
+        user: {
+          type: Object,
+          notify: true,
+          reflectToAttribute: true
+        },
+        _darkClass: {
+          type: String,
+          value: ''
+        },
+        _email: String,
+        _password: String
       },
 
+      onEmailPassword: function () {
+        var email = this._email;
+        var password = this._password;
+        if (email && password) {
+          if (this.link) {
+            console.log(firebase.auth);
+            var credential = firebase.auth.EmailAuthProvider.credential(email, password);
+            console.log('credential', credential);
+            if (firebase.auth().currentUser) {
+              firebase.auth().currentUser.link(credential).then(function (user) {
+                console.log("Account linking success", user);
+              }, function (error) {
+                console.log("Account linking error", error);
+                vm.onError = error;
+              });
+            }
+          } else {
+            // firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {   // Handle Errors here.   var errorCode = error.code;   var errorMessage = error.message;   // ... });
+            firebase.auth().signInWithEmailAndPassword(email, password).then(function (result) {
+              vm.token = result.credential.accessToken;
+            }).catch(function (error) {
+              // Handle Errors here.
+              var errorCode = error.code;
+              var errorMessage = error.message;
+              vm.onError = error;
+            });
+          }
+        } else {}
+
+      },
+
+      onFacebook: function () {
+        var provider = new firebase.auth.FacebookAuthProvider();
+        if (this.link) {
+          this._linkAuth(provider);
+        } else {
+          this._loginAuth(provider);
+        }
+      },
+
+      onGoogle: function () {
+        var provider = new firebase.auth.GoogleAuthProvider();
+        if (this.link) {
+          this._linkAuth(provider);
+        } else {
+          this._loginAuth(provider);
+        }
+      },
+
+      onTwitter: function () {
+        var provider = new firebase.auth.TwitterAuthProvider();
+        if (this.link) {
+          this._linkAuth(provider);
+        } else {
+          this._loginAuth(provider);
+        }
+      },
+
+      onGithub: function () {
+        var provider = new firebase.auth.GithubAuthProvider();
+        if (this.link) {
+          this._linkAuth(provider);
+        } else {
+          this._loginAuth(provider);
+        }
+      },
+
+      _linkAuth: function (provider) {
+        var vm = this;
+        if (firebase.auth().currentUser) {
+          firebase.auth().currentUser.linkWithPopup(provider).then(function (result) {
+            // Accounts successfully linked.
+            var credential = result.credential;
+            var user = result.user;
+            vm.token = result.credential.accessToken;
+            vm.user = user;
+            console.log('LINK_AUTH:', 'success', user);
+          }).catch(function (error) {
+            console.error('LINK_AUTH:', error);
+            if (error.code === "auth/credential-already-in-use") {
+              console.log('RESIGNING IN');
+              vm._loginAuth(provider);
+            }
+            if (error.code === 'auth/popup-blocked' || error.code === 'auth/network-request-failed') {
+              vm.onError = error;
+              firebase.auth().currentUser.linkWithRedirect(provider);
+              firebase.auth().getRedirectResult().then(function (result) {
+                if (result.credential) {
+                  // This gives you a Google Access Token. You can use it to access the Google API.
+                  vm.token = result.credential.accessToken;
+                  // ...
+                }
+                // The signed-in user info.
+                var user = result.user;
+                vm.user = user;
+              }).catch(function (err) {
+                // Handle Errors here.
+                var errorCode = err.code;
+                var errorMessage = err.message;
+                // The email of the user's account used.
+                var email = err.email;
+                // The firebase.auth.AuthCredential type that was used.
+                var credential = err.credential;
+                vm.onError = err;
+              });
+            }
+          });
+        } else {
+          console.error('LINK_AUTH:', 'no user to link');
+        }
+      },
+
+      _loginAuth: function (provider) {
+        var vm = this;
+        firebase.auth().signInWithPopup(provider).then(function (result) {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          vm.token = result.credential.accessToken;
+          // The signed-in user info.
+          vm.user = result.user;
+        }).catch(function (error) {
+          // Handle Errors here.
+          console.error('LOGIN_AUTH:', error.message);
+          vm.onError = error;
+          if (error.code === 'auth/popup-blocked' || error.code === 'auth/network-request-failed') {
+            firebase.auth().signInWithRedirect(provider);
+            firebase.auth().getRedirectResult().then(function (result) {
+              if (result.credential) {
+                // This gives you a Google Access Token. You can use it to access the Google API.
+                vm.token = result.credential.accessToken;
+                // ...
+              }
+              // The signed-in user info.
+              var user = result.user;
+              vm.user = user;
+              console.log('REDIRECT_LOGIN:', 'success', user);
+            }).catch(function (err) {
+              // Handle Errors here.
+              var errorCode = err.code;
+              var errorMessage = err.message;
+              // The email of the user's account used.
+              var email = err.email;
+              // The firebase.auth.AuthCredential type that was used.
+              var credential = err.credential;
+              console.error('REDIRECT_LOGIN:', errorMessage);
+              vm.onError = err;
+            });
+          }
+        });
+      },
+
+      _setDark: function (state) {
+        if (state) {
+          this._darkClass = 'theme-dark';
+        } else {
+          this._darkClass = '';
+        }
+      },
+
+      _validateEmail: function () {
+        var vm = this;
+        this.debounce('validateEmail', function () {
+          vm.invalidEmail
+        }, 1000)
+      }
     });
   </script>
 </dom-module>
